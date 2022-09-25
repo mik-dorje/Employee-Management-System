@@ -12,6 +12,6 @@ router
 // .post(verifyRoles(ROLES_LIST.Admin), usersController.createNewUser)
 // .delete(verifyRoles(ROLES_LIST.Admin), usersController.deleteUser);
 
-router.route("/:id").get(verifyRoles(["Admin"]), usersController.getUser);
+// router.route("/:id").get(verifyRoles(["Admin"]), usersController.getUser);
 
 module.exports = router;

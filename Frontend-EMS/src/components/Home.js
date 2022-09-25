@@ -23,16 +23,18 @@ const Home = () => {
       <Paper
         variant="outlined"
         sx={{
-          p: 2,
-          minHeight: "90vh",
+          p: 1,
+          minHeight: "75vh",
         }}
       >
         <AppBar
           position="static"
           sx={{
+            height: "50px",
             background: "#bf8b59",
             borderRadius: "5px",
-            textAlign: "center",
+            display: "grid",
+            placeContent: "center",
           }}
         >
           <Toolbar>
@@ -42,7 +44,6 @@ const Home = () => {
               component="div"
               sx={{
                 flexGrow: 1,
-
                 display: { xs: "none", sm: "block" },
               }}
             >
@@ -52,7 +53,6 @@ const Home = () => {
         </AppBar>
         <Box
           sx={{
-            // background: "blue",
             mt: 2,
             p: 1,
             display: "flex",

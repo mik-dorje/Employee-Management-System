@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import TableRow, { tableRowClasses } from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
@@ -20,6 +20,9 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "../../api/axios";
+import AuthContext from "../../context/AuthProvider";
+
+const USERS_URL = "/users";
 
 const DELETE_URL = "/delete";
 const UPDATE_URL = "/patch";
@@ -30,13 +33,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: "white",
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 15,
+    fontSize: 14,
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
+    // fontSize: 10,
   },
   // hide last border
   "&:last-child td, &:last-child th": {
@@ -44,7 +48,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function UsersTable({ users, setUsers, searchWord }) {
+export default function UsersTable({ users, setUsers, typedWord }) {
   const [editLayerId, setEditLayerId] = useState(null);
   const [editUsername, setEditUsername] = useState("");
   const [editFirstname, setEditFirstname] = useState("");
@@ -52,9 +56,12 @@ export default function UsersTable({ users, setUsers, searchWord }) {
   const [editPhone, setEditPhone] = useState("");
   // const [editUsername, setEditUsername] = useState("");
 
-  const [tableData, setTableData] = useState({ ...users });
+  const [tableData, setTableData] = useState(null);
 
-  console.log(tableData);
+  const { auth, setAuth } = useContext(AuthContext);
+
+  const roles = auth?.foundUser?.roles;
+
 
   const tableHeaders = [
     "Username",
@@ -100,27 +107,44 @@ export default function UsersTable({ users, setUsers, searchWord }) {
   const handleDelete = async (id) => {
     console.log(id);
     try {
-      const response = await axios.delete(DELETE_URL, {
-        body: JSON.stringify({ id }),
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const response = await axios.delete(
+        USERS_URL,
+        JSON.stringify({
+          id,
+          roles,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
 
-      console.log(JSON.stringify(response?.data));
+      console.log(JSON.stringify(response?.data?.outcome));
     } catch (err) {
       console.log(err.message);
     }
     setUsers(users?.filter((user) => user._id !== id));
   };
 
-  // handleSearch;
-  if (searchWord) {
-    setTableData(users?.filter((user) => user.firstname === searchWord));
-  }
+  // handleSearch
+  useEffect(() => {
+    setTableData(users);
+    if (typedWord) {
+      const resultsArray = users?.filter(
+        (user) =>
+          user?.username?.includes(typedWord) ||
+          user?.firstname?.includes(typedWord) ||
+          user?.lastname?.includes(typedWord) ||
+          user?.phone?.includes(typedWord) ||
+          user?.roles?.includes(typedWord)
+      );
+      setTableData(resultsArray);
+    }
+  }, [typedWord, users]);
 
   return (
-    <TableContainer component={Paper} sx={{ my: 2 }}>
-      <Table sx={{ minWidth: 300 }} aria-label="customized table">
+    <TableContainer component={Paper} sx={{ my: 1 }}>
+      <Table sx={{ minWidth: 300 }} size="small" aria-label="customized table">
         <TableHead>
           <TableRow>
             {tableHeaders.map((tableHeader) => (
@@ -130,15 +154,15 @@ export default function UsersTable({ users, setUsers, searchWord }) {
         </TableHead>
 
         <TableBody>
-          {users?.map((user) =>
-            editLayerId === user._id ? (
+          {tableData?.map((user) =>
+            editLayerId === user?._id ? (
               <StyledTableRow key={user._id}>
                 <StyledTableCell align="left">
                   <input
                     name="username"
                     value={editUsername}
                     onChange={(e) => setEditUsername(e.target.value)}
-                    style={{ width: "100px" }}
+                    style={{ width: "80px" }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="left">
@@ -146,7 +170,7 @@ export default function UsersTable({ users, setUsers, searchWord }) {
                     name="firstname"
                     value={editFirstname}
                     onChange={(e) => setEditFirstname(e.target.value)}
-                    style={{ width: "100px" }}
+                    style={{ width: "80px" }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="left">
@@ -154,7 +178,7 @@ export default function UsersTable({ users, setUsers, searchWord }) {
                     name="lastname"
                     value={editLastname}
                     onChange={(e) => setEditLastname(e.target.value)}
-                    style={{ width: "100px" }}
+                    style={{ width: "80px" }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="left">
@@ -162,7 +186,7 @@ export default function UsersTable({ users, setUsers, searchWord }) {
                     name="phone"
                     value={editPhone}
                     onChange={(e) => setEditPhone(e.target.value)}
-                    style={{ width: "100px" }}
+                    style={{ width: "80px" }}
                   />
                 </StyledTableCell>
                 <StyledTableCell align="left">
@@ -174,10 +198,16 @@ export default function UsersTable({ users, setUsers, searchWord }) {
                     variant="outlined"
                     aria-label="outlined button group"
                   >
-                    <IconButton onClick={(e) => handleDone(user._id)}>
+                    <IconButton
+                      sx={{ width: "40px", height: "40px" }}
+                      onClick={(e) => handleDone(user._id)}
+                    >
                       <DoneIcon fontSize="small" />
                     </IconButton>
-                    <IconButton onClick={(e) => handleDelete(user._id)}>
+                    <IconButton
+                      sx={{ width: "40px", height: "40px" }}
+                      onClick={(e) => handleDelete(user._id)}
+                    >
                       <DeleteOutlinedIcon fontSize="small" />
                     </IconButton>
                   </ButtonGroup>
@@ -198,10 +228,16 @@ export default function UsersTable({ users, setUsers, searchWord }) {
                     variant="outlined"
                     aria-label="outlined button group"
                   >
-                    <IconButton onClick={(e) => handleEdit(user._id)}>
+                    <IconButton
+                      sx={{ width: "40px", height: "40px" }}
+                      onClick={(e) => handleEdit(user._id)}
+                    >
                       <ModeEditOutlineOutlinedIcon fontSize="small" />
                     </IconButton>
-                    <IconButton onClick={(e) => handleDelete(user._id)}>
+                    <IconButton
+                      sx={{ width: "40px", height: "40px" }}
+                      onClick={(e) => handleDelete(user._id)}
+                    >
                       <DeleteOutlinedIcon fontSize="small" />
                     </IconButton>
                   </ButtonGroup>

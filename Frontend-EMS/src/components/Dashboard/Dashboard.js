@@ -39,17 +39,18 @@ const Dashboard = () => {
       variant="outlined"
       // elevation={3}
       sx={{
-        p: 2,
-        minHeight: "90vh",
+        p: 1,
       }}
     >
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="static"
           sx={{
+            height: "50px",
             background: "#bf8b59",
             borderRadius: "5px",
-            textAlign: "center",
+            display: "grid",
+            placeContent: "center",
           }}
         >
           <Toolbar>
@@ -59,7 +60,6 @@ const Dashboard = () => {
               component="div"
               sx={{
                 flexGrow: 1,
-
                 display: { xs: "none", sm: "block" },
               }}
             >
@@ -72,43 +72,41 @@ const Dashboard = () => {
         <Paper
           elevation={3}
           sx={{
-            minHeight: "76vh",
+            minHeight: "72vh",
             m: 1,
             p: 3,
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             gap: 2,
-            // background: "linear-gradient(120deg, #B8C6DB,#F5F7fA)",
           }}
         >
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{}}>
-              <Chart
-                options={barData.options}
-                series={barData.series}
-                type="bar"
-                width="500"
-                height="255"
-              />
-            </Box>
+          <Paper sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Chart
+              options={barData.options}
+              series={barData.series}
+              type="bar"
+              width="500"
+              height="180"
+            />
+
             <Chart
               options={barData.options}
               series={barData.series}
               type="line"
               width="500"
-              height="255"
+              height="180"
             />
-          </Box>
+          </Paper>
 
           {/* card section */}
-          <Box sx={{ display: "flex", gap: 1, p: 2 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             <Grid
               container
               rowSpacing={1}
               columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             >
               <Grid item xs={6}>
-                <Card sx={{ p: 1, boxShadow: 3, minHeight: "300" }}>
+                <Card sx={{ p: 0.5, boxShadow: 3, minHeight: "300" }}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -133,7 +131,7 @@ const Dashboard = () => {
                 </Card>
               </Grid>
               <Grid item xs={6}>
-                <Card sx={{ p: 1, boxShadow: 3, minHeight: "300" }}>
+                <Card sx={{ p: 0.5, boxShadow: 3, minHeight: "300" }}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -159,7 +157,7 @@ const Dashboard = () => {
                 </Card>
               </Grid>
               <Grid item xs={6}>
-                <Card sx={{ p: 1, boxShadow: 3, minHeight: "300" }}>
+                <Card sx={{ p: 0.5, boxShadow: 3, minHeight: "300" }}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -184,7 +182,7 @@ const Dashboard = () => {
                 </Card>
               </Grid>
               <Grid item xs={6}>
-                <Card sx={{ p: 1, boxShadow: 3, minHeight: "300" }}>
+                <Card sx={{ p: 0.5, boxShadow: 3 }}>
                   <CardActionArea>
                     <CardMedia
                       component="img"

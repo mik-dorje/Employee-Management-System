@@ -1,41 +1,3 @@
-// import { AppBar, Box, Paper, Toolbar, Typography } from "@mui/material";
-// import React, { useEffect, useState } from "react";
-// import axios from "../../api/axios";
-// import UsersTable from "./UsersTable";
-
-// const USERS_URL = "/users";
-
-// const UserList = () => {
-//   const [users, setUsers] = useState(null);
-
-//   const fetchUsers = async () => {
-//     const response = await axios.get(USERS_URL);
-//     setUsers(response.data);
-//   };
-
-//   useEffect(() => {
-//     fetchUsers();
-//   }, []);
-
-//   return (
-//     <div>
-//       <Paper
-//         variant="outlined"
-//         // elevation={3}
-//         sx={{
-//           p: 2,
-//           minHeight: "90vh",
-//           background: "linear-gradient(120deg, #B8C6DB, #F5F7fA)",
-//         }}
-//       >
-//         <UsersTable users={users} setUsers={setUsers} />
-//       </Paper>
-//     </div>
-//   );
-// };
-
-// export default UserList;
-
 import React, { useState, useEffect } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -81,7 +43,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
+    padding: theme.spacing(0.5, 0.5, 0.5, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
@@ -89,7 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
       "&:focus": {
-        width: "20ch",
+        width: "18ch",
       },
     },
   },
@@ -99,6 +61,7 @@ export default function UserList() {
   const [users, setUsers] = useState(null);
 
   const [searchWord, setSearchWord] = useState(null);
+  const [typedWord, setTypedWord] = useState(null);
 
   const fetchUsers = async () => {
     const response = await axios.get(USERS_URL);
@@ -114,20 +77,33 @@ export default function UserList() {
       variant="outlined"
       // elevation={3}
       sx={{
-        p: 2,
+        p: 1,
         minHeight: "90vh",
       }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" sx={{ bgcolor: "#bf8b59" }}>
+        <AppBar
+          position="static"
+          sx={{
+            height: "50px",
+            background: "#bf8b59",
+            borderRadius: "5px",
+            display: "flex",
+            alignItems: "space-around",
+            justifyContent: "center",
+          }}
+        >
           <Toolbar>
             <Typography
               variant="h6"
               noWrap
               component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+              }}
             >
-              Members
+              Dashboard
             </Typography>
             <Search>
               <SearchIconWrapper>
@@ -137,13 +113,13 @@ export default function UserList() {
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
                 // value={searchWord}
-                // onChange={(e) => setTypedWord(e.target.value)}
+                onChange={(e) => setTypedWord(e.target.value)}
               />
             </Search>
           </Toolbar>
         </AppBar>
       </Box>
-      <UsersTable users={users} setUsers={setUsers} searchWord={searchWord} />
+      <UsersTable users={users} setUsers={setUsers} typedWord={typedWord} />
     </Paper>
   );
 }

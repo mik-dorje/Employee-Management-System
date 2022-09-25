@@ -52,40 +52,25 @@ const updateUser = async (req, res) => {
   if (editFirstname) user.lastname = editFirstname;
   if (editLastname) user.lastname = editLastname;
   if (editPhone) user.phone = editPhone;
-  const result = await user.save();
+  const result = await User.save();
   res.json(result);
 };
 
-//   const updateEmployee = async (req, res) => {
-//     if (!req?.body?.id) {
-//       return res.status(400).json({ message: "ID parameter is required." });
-//     }
-//     const employee = await Employee.findOne({ _id: req.body.id }).exec();
-//     if (!employee) {
-//       return res
-//         .status(204)
-//         .json({ message: `No employee matches ID ${req.body.id}.` });
-//     }
-//     if (req.body?.firstname) employee.firstname = req.body.firstname;
-//     if (req.body?.lastname) employee.lastname = req.body.lastname;
-//     const result = await employee.save();
-//     res.json(result);
-//   };
-
 const deleteUser = async (req, res) => {
-  if (!req?.body?.id) {
+  const { id, roles } = req?.body;
+  if (!id) {
     return res.status(400).json({ message: "User ID required" });
   }
-  const user = await User.findOne({ _id: req.body.id }).exec();
-  if (!user) {
+  const foundUser = await User.findOne({ _id: req?.body?.id }).exec();
+  if (!foundUser) {
     return res
       .status(204)
       .json({ message: `User ID ${req.body.id} not found` });
   }
-  user.remove();
-  res.send({ data: true });
-  // const result = await user.deleteOne({ _id: req.body.id });
-  res.json(result);
+  // user.remove();
+  // res.send({ data: true });
+  const result = await User.deleteOne({ _id: req?.body?.id });
+  res.json({ outcome: "From res.json" });
 };
 
 const getUser = async (req, res) => {

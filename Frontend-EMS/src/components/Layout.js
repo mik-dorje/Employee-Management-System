@@ -17,7 +17,6 @@ import TextSnippetOutlinedIcon from "@mui/icons-material/TextSnippetOutlined";
 import Groups2OutlinedIcon from "@mui/icons-material/Groups2Outlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -32,6 +31,7 @@ import avatarImg from "../images/toon.jpg";
 import AuthContext from "../context/AuthProvider";
 
 const drawerWidth = 240;
+// const drawerWidth = { md: "240", xs: " 240" };
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -189,13 +189,16 @@ export default function MiniDrawer() {
             height: "100vh",
             flexDirection: "column",
             justifyContent: "space-between",
+
+            boxShadow: "3px 3px 12px 2px #0d1017",
           }}
         >
           <List>
             {/*General Section */}
             <Box
               sx={{
-                backgroundColor: "#bf8b59",
+                backgroundColor: "#0d1017",
+                color: "white",
                 minHeight: 48,
                 display: "flex",
                 flexDirection: "row",
@@ -210,24 +213,28 @@ export default function MiniDrawer() {
                   mr: open ? 3 : "auto",
                   alignItem: "center",
                   justifyContent: "center",
+                  color: "white",
                 }}
               >
                 <SupervisedUserCircleOutlinedIcon />
               </ListItemIcon>
 
-              <Typography sx={{ color: "#424242", opacity: open ? 1 : 0 }}>
+              <Typography sx={{ opacity: open ? 1 : 0, fontSize: "17px" }}>
                 General
               </Typography>
             </Box>
             <Divider />
 
-            <Link to="/home">
+            <Link to="/home" style={{ textDecoration: "none" }}>
               <ListItemButton
                 key="home"
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2,
+                  "&:focus": {
+                    backgroundColor: "#bf8b59",
+                  },
                 }}
               >
                 <ListItemIcon
@@ -246,14 +253,18 @@ export default function MiniDrawer() {
                 />
               </ListItemButton>
             </Link>
+            <Divider />
 
-            <Link to="/notice">
+            <Link to="/notice" style={{ textDecoration: "none" }}>
               <ListItemButton
-                key="home"
+                key="notice"
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2,
+                  "&:focus": {
+                    backgroundColor: "#bf8b59",
+                  },
                 }}
               >
                 <ListItemIcon
@@ -277,7 +288,8 @@ export default function MiniDrawer() {
             {/* Admin Section */}
             <Box
               sx={{
-                backgroundColor: "#bf8b59",
+                backgroundColor: "#0d1017",
+                color: "white",
                 minHeight: 48,
                 display: "flex",
                 flexDirection: "row",
@@ -292,22 +304,26 @@ export default function MiniDrawer() {
                   mr: open ? 3 : "auto",
                   alignItem: "center",
                   justifyContent: "center",
+                  color: "white",
                 }}
               >
                 <AdminPanelSettingsOutlinedIcon />
               </ListItemIcon>
 
-              <Typography sx={{ color: "#424242", opacity: open ? 1 : 0 }}>
+              <Typography sx={{ opacity: open ? 1 : 0, fontSize: "17px" }}>
                 Admin
               </Typography>
             </Box>
-            <Link to="/dashboard">
+            <Link to="/dashboard" style={{ textDecoration: "none" }}>
               <ListItemButton
                 key={"text"}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2,
+                  "&:focus": {
+                    backgroundColor: "#bf8b59",
+                  },
                 }}
               >
                 <ListItemIcon
@@ -326,13 +342,17 @@ export default function MiniDrawer() {
                 />
               </ListItemButton>
             </Link>
-            <Link to="/userlist">
+            <Divider />
+            <Link to="/userlist" style={{ textDecoration: "none" }}>
               <ListItemButton
                 key={"userlist"}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2,
+                  "&:focus": {
+                    backgroundColor: "#bf8b59",
+                  },
                 }}
               >
                 <ListItemIcon
@@ -366,37 +386,50 @@ export default function MiniDrawer() {
                 alt={auth?.user}
                 src={avatarImg}
                 sx={{
-                  width: open ? 75 : 60,
-                  height: open ? 75 : 60,
-                  border: "1px solid gray",
+                  width: open ? 65 : 50,
+                  height: open ? 65 : 50,
+                  border: "2px solid #0d1017",
                 }}
               />
             </Box>
             <Box
               sx={{
                 textAlign: "center",
-                bgcolor: "#bf8b59",
+                backgroundColor: "#0d1017",
+                color: "white",
               }}
             >
               <Typography
                 sx={{
-                  color: "#424242",
-
                   my: 1,
-                  opacity: open ? 1 : 0,
+                  p: 0.8,
+                  fontSize: "16px",
                 }}
               >
-                Signed as:
-                {auth?.foundUser?.roles.includes("Admin") ? " Admin" : " User"}
+                {auth?.foundUser?.roles.includes("Admin")
+                  ? open
+                    ? " Admin"
+                    : "A"
+                  : open
+                  ? " User"
+                  : "U"}
               </Typography>
             </Box>
+
             <ListItemButton
               key={"text"}
               sx={{
+                backgroundColor: "#0d1017",
+                color: "white",
                 minHeight: 48,
-                justifyContent: open ? "initial" : "center",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
                 px: 2,
-                backgroundColor: "#bf8b59",
+                "&:hover": {
+                  backgroundColor: "#0d1017",
+                  opacity: 0.8,
+                },
               }}
               onClick={handleLogout}
             >
@@ -404,15 +437,16 @@ export default function MiniDrawer() {
                 sx={{
                   minWidth: 0,
                   mr: open ? 3 : "auto",
+                  alignItem: "center",
                   justifyContent: "center",
+                  color: "white",
                 }}
               >
                 <LogoutIcon />
               </ListItemIcon>
-              <ListItemText
-                primary={"Logout"}
-                sx={{ color: "#424242", opacity: open ? 1 : 0 }}
-              />
+              <Typography sx={{ opacity: open ? 1 : 0, fontSize: "17px" }}>
+                Logout
+              </Typography>
             </ListItemButton>
           </List>
         </Box>
